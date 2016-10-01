@@ -1,8 +1,7 @@
 'use strict';
 
 const DDSL = require('xjst-ddsl/lib/ddsl');
-const React = require('react');
-const camelCase = require('camel-case');
+const h = require('snabbdom-flat-h');
 
 const capitalizableDict = {
   acceptcharset: 'acceptCharset',
@@ -50,19 +49,19 @@ const capitalizableDict = {
   // checked: 'defaultChecked'
 };
 
-module.exports = function (templates, reactComponents, lib) {
+module.exports = function (templates, components, lib) {
     var ddslRuntime = {};
     ddslRuntime._tmpls = [];
 
-  // REACT TRANSFORMATIONS IN RUNTIME
+  // TRANSFORMATIONS IN RUNTIME
   const runtime = new DDSL({
     // generateKeys: true,
-    components: reactComponents,
+    components,
     constructor: function (ddsl, context, js) {
       var props = null;
       if (ddsl[1]) {
         props = {};
-        // capitalize react props
+        // capitalize props
         Object.keys(ddsl[1]).forEach(function(key) {
           if (capitalizableDict[key]) {
             props[capitalizableDict[key]] = ddsl[1][key];
@@ -76,7 +75,7 @@ module.exports = function (templates, reactComponents, lib) {
             if (ruleString) {
               const rulePair = ruleString.split(/:(.+)/);
               if(rulePair[0] && rulePair[1]) {
-                  ruleMap[camelCase(rulePair[0].trim())] = rulePair[1].trim();
+                  ruleMap[rulePair[0].trim()] = rulePair[1].trim();
               }
             }
             return ruleMap;
@@ -92,14 +91,16 @@ module.exports = function (templates, reactComponents, lib) {
       if(context.block && js) {
         Object.keys(js).forEach(key => {
           if(typeof js[key] === 'function') {
-            js[key] = js[key].bind(ddslRuntime.reactContext);
+            js[key] = js[key].bind(ddslRuntime.context);
           }
         });
         props = Object.assign(props || {}, js);
       }
 
-      ddsl[1] = props;
-      return React.createElement.apply(React.createElement, ddsl);
+      props.children = ddsl[2];
+      
+      const createElement = typeof ddsl[0] === 'function' ? ddsl[0] : h[ddsl[0]]; 
+      return createElement(props);
     }
   });
 
@@ -110,10 +111,10 @@ module.exports = function (templates, reactComponents, lib) {
   };
 
   ddslRuntime.match = function(json, context) {
-    ddslRuntime.reactContext = context;
+    ddslRuntime.context = context;
     ddslRuntime._tmpls.forEach(ddslRuntime.compile);
     ddslRuntime.BEMContext.prototype.lib = lib || {};
-    ddslRuntime.BEMContext.prototype.lib.cloneElement = React.cloneElement;
+    ddslRuntime.BEMContext.prototype.lib.cloneElement = el => el;
     return ddslRuntime.apply(json);
   };
 
