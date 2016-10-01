@@ -1,11 +1,11 @@
 {
-  "name": "ddsl-react",
+  "name": "ddsl-flat-h",
   "version": "1.0.0",
-  "description": "Apply ddsl to React components in runtime",
+  "description": "Apply ddsl to snabbdom virtual tree in runtime",
   "main": "index.js",
   "dependencies": {
     "camel-case": "^3.0.0",
-    "react": "^15.3.0",
+    "snabbdom-flat-h": "git+https://github.com/valentin-nemcev/snabbdom-flat-h.git#v1.0.1",
     "xjst-ddsl": "github:awinogradov/xjst-ddsl#js-bindings"
   },
   "devDependencies": {},
@@ -17,7 +17,8 @@
     "url": "git+https://github.com/awinogradov/ddsl-react.git"
   },
   "keywords": [
-    "react",
+    "snabbdom",
+    "hyperscript",
     "templates",
     "xjst",
     "bem"
