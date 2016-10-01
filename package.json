@@ -4,7 +4,6 @@
   "description": "Apply ddsl to snabbdom virtual tree in runtime",
   "main": "index.js",
   "dependencies": {
-    "camel-case": "^3.0.0",
     "snabbdom-flat-h": "git+https://github.com/valentin-nemcev/snabbdom-flat-h.git#v1.0.1",
     "xjst-ddsl": "github:awinogradov/xjst-ddsl#js-bindings"
   },
