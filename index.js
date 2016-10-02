@@ -1,7 +1,7 @@
 'use strict';
 
 const DDSL = require('xjst-ddsl/lib/ddsl');
-const h = require('snabbdom-flat-h');
+const h = require('snabbdom-flat-h').default;
 
 const capitalizableDict = {
   acceptcharset: 'acceptCharset',
